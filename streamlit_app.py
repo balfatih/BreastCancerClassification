@@ -14,7 +14,7 @@ st.write("Upload a breast image and the model will classify it.")
 # ----------------------
 @st.cache_resource
 def load_cnn_model():
-    model_path = "cnn_model_original_dataset.h5"  # aynı klasörde olmalı
+    model_path = "CNN_Model.h5"  # aynı klasörde olmalı
     cnn_model = tf.keras.models.load_model(model_path)
     
     # Feature extraction için ara katmanı seçin
