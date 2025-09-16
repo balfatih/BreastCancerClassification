@@ -12,7 +12,7 @@ st.title('Breast Cancer Classification')
 st.write("Upload a breast image and the model will classify it.")
 
 model = joblib.load("CNN_GBM_model.joblib")
-st.write("Input shape to model:", img_array.shape)
+
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
@@ -24,7 +24,7 @@ if uploaded_file is not None:
     image = image.resize((128, 128))
     img_array = np.array(image).astype("float32") / 255.0
     img_array = np.expand_dims(img_array, axis=0)
-
+    st.write("Input shape to model:", img_array.shape)
     prediction = model.predict(img_array)
 
     st.subheader("Prediction Result")
