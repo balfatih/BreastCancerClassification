@@ -7,3 +7,5 @@ Seaborn
 Tensorflow
 joblib
 StandardScaler
+gdown
+os
