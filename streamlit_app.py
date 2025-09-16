@@ -25,12 +25,3 @@ def load_cnn_model():
 
 cnn_model = load_cnn_model()
 
-# ----------------------
-# GBM Model Yükleme
-# ----------------------
-@st.cache_resource
-def load_gbm_model():
-    return joblib.load("CNN_GBM_model.joblib")
-
-gbm_model = load_gbm_model()
-
