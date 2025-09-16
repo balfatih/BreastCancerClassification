@@ -8,14 +8,14 @@ from tensorflow.keras.models import Model
 
 st.title("Breast Cancer Hybrid Classification")
 st.write("Upload a breast image and the model will classify it.")
-
 # ----------------------
 # CNN Model Yükleme
 # ----------------------
 @st.cache_resource
 def load_cnn_model():
-    model_path = "CNN_Model.h5"
+    model_path = "cnn_model_original_dataset.h5"
     cnn_model = tf.keras.models.load_model(model_path)
+
     # Flatten sonrası Dense(558) katmanı output olarak
     # Son 3. katmanı kullanıyoruz
     feature_layer = cnn_model.layers[-3]
