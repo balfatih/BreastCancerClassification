@@ -15,7 +15,7 @@ st.write("Upload a breast image and the model will classify it.")
 # CNN Model Yükleme
 # ----------------------
 def load_cnn_model():
-    model_path = "cnn_model.h5"
+    model_path = "cnn_model_original_dataset.keras"
     if not os.path.exists(model_path):
         url = "https://drive.google.com/file/d/18TuFKSnLCySlrdiZ8M-ySIRqI5adu3oW/"
         import gdown
