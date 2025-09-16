@@ -20,20 +20,19 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Uploaded Image", use_column_width=True)
 
-    # Ön işleme
-    image = image.resize((128, 128))  # Eğitim boyutuna uygun hale getir
-    img_array = np.array(image).astype('float32') / 255.0
+    # Ön işleme: eğitimde yaptığınız gibi normalize edin
+    image = image.resize((128, 128))
+    img_array = np.array(image).astype("float32") / 255.0
     img_array = np.expand_dims(img_array, axis=0)  # (1,128,128,3)
 
     # Tahmin
     prediction = model.predict(img_array)
 
-    # Eğer çıktı sınıf ise:
-    st.write("### Prediction Result:")
-    st.write(prediction)
+    st.subheader("Prediction Result")
+    st.write(f"Predicted Class: **{prediction[0]}**")
 
-    # Eğer çıktı olasılıklar ise:
+    # Eğer olasılık da görmek isterseniz
     if hasattr(model, "predict_proba"):
         proba = model.predict_proba(img_array)
-        st.write("### Prediction Probabilities:")
+        st.write("Class Probabilities:")
         st.write(proba)
