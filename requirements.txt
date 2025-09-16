@@ -1,11 +1,7 @@
-Streamlit
-Pandas
-Numpy
-Matplotlib
-Scikit-Learn
-Seaborn
-Tensorflow
+streamlit
+numpy
+pillow
 joblib
-StandardScaler
+scikit-learn
+tensorflow
 gdown
-os
