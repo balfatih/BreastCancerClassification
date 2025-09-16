@@ -1,24 +1,48 @@
 import streamlit as st
 import numpy as np
 import joblib
-from PIL import Image
-import tensorflow as tf
-import os
-from tensorflow.keras.models import Model, load_model
 
+st.title("Breast Cancer Classification using Precomputed Features")
 
-st.title("Breast Cancer Hybrid Classification")
-st.write("Upload a breast image and the model will classify it.")
-
-
-# CNN model yükle
+# ----------------------
+# GBM Model Yükleme
+# ----------------------
 @st.cache_resource
-def load_cnn_model():
-    model_path = "CNN_Model.h5"
-    cnn_model = load_model(model_path)
-    return cnn_model
+def load_gbm_model():
+    return joblib.load("CNN_GBM_model.joblib")
 
-cnn_model = load_cnn_model()
+gbm_model = load_gbm_model()
 
-# Görüntü yükleme
-uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+# ----------------------
+# Feature ve Label Yükleme
+# ----------------------
+x_test = np.load("x_test.npy")  # Shape: (num_samples, 558)
+y_test = np.load("y_test.npy")  # Shape: (num_samples, )
+
+# Kullanıcıya test setinden bir örnek seçtirebiliriz
+sample_index = st.number_input(
+    "Select a test sample index (0 - {})".format(len(x_test)-1),
+    min_value=0,
+    max_value=len(x_test)-1,
+    value=0,
+    step=1
+)
+
+features = x_test[sample_index].reshape(1, -1)  # Tek örnek için (1,558)
+true_label = y_test[sample_index]
+
+# ----------------------
+# GBM ile Tahmin
+# ----------------------
+prediction = gbm_model.predict(features)
+predicted_label = {0: "Benign", 1: "Malignant"}[prediction[0]]
+
+st.subheader("Prediction Result")
+st.write(f"Predicted Class: **{predicted_label}**")
+st.write(f"True Class: **{ {0:'Benign',1:'Malignant'}[true_label] }**")
+
+# Olasılıkları göster
+if hasattr(gbm_model, "predict_proba"):
+    proba = gbm_model.predict_proba(features)[0]
+    st.subheader("Class Probabilities")
+    st.write({"Benign": float(proba[0]), "Malignant": float(proba[1])})
