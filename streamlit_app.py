@@ -14,7 +14,7 @@ st.write("Upload a breast image and the model will classify it.")
 # ----------------------
 @st.cache_resource
 def load_cnn_model():
-    model_path = "cnn_model_original_dataset.h5"
+    model_path = "CNN_Model.h5"
     cnn_model = tf.keras.models.load_model(model_path)
     return cnn_model
 
