@@ -6,6 +6,7 @@ import tensorflow as tf
 import numpy as np
 import joblib
 from sklearn.preprocessing import StandardScaler
+from PIL import Image
 
 st.title('Breast Cancer Classification')
 st.write("Upload a breast image and the model will classify it.")
