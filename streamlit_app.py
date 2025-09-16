@@ -9,13 +9,12 @@ from tensorflow.keras.models import Model
 st.title("Breast Cancer Hybrid Classification")
 st.write("Upload a breast image and the model will classify it.")
 
-
 # ----------------------
 # CNN Model Yükleme
 # ----------------------
 @st.cache_resource
 def load_cnn_model():
-    model_path = "CNN_Model.h5"
+    model_path = "cnn_model_original_dataset.h5"
     cnn_model = tf.keras.models.load_model(model_path)
     return cnn_model
 
@@ -49,10 +48,11 @@ if uploaded_file is not None:
     # ----------------------
     # CNN’den feature çıkarma
     # ----------------------
-    # Flatten sonrası Dense(558) katmanı öncesi çıkış
-    # Sequential modelde direct predict kullanabiliriz
-    features = tf.keras.Model(inputs=cnn_model.input, outputs=cnn_model.layers[-3].output).predict(img_array)
-    
+    # Sequential modelde son Dense(558) katmanı feature olarak kullanılacak
+    feature_layer = cnn_model.layers[-3]  # Flatten->Dense(558)->Dense(322)->Dense(2)
+    features = feature_layer(img_array)   # model(input) yerine doğrudan katman çağırıyoruz
+    features = tf.keras.backend.eval(features)  # numpy array'e çevir
+
     # GBM ile tahmin
     prediction = gbm_model.predict(features)
     
