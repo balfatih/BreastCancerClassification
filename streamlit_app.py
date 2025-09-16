@@ -11,26 +11,26 @@ from PIL import Image
 st.title('Breast Cancer Classification')
 st.write("Upload a breast image and the model will classify it.")
 
-model = joblib.load("CNN_GBM_model.joblib")
 
+# ----------------------
+# CNN Model Yükleme
+# ----------------------
+@st.cache_resource
+def load_cnn_model():
+    model_path = "cnn_model.h5"
+    if not os.path.exists(model_path):
+        url = "https://drive.google.com/uc?id=18TuFKSnLCySlrdiZ8M-ySIRqI5adu3oW"
+        gdown.download(url, model_path, quiet=False)
+    return tf.keras.models.load_model(model_path)
 
-uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+cnn_model = load_cnn_model()
 
+# ----------------------
+# GBM Model Yükleme
+# ----------------------
+@st.cache_resource
+def load_gbm_model():
+    return joblib.load("CNN_GBM_model.joblib")
 
-if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+gbm_model = load_gbm_model()
 
-    image = image.resize((128, 128))
-    img_array = np.array(image).astype("float32") / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
-    st.write("Input shape to model:", img_array.shape)
-    prediction = model.predict(img_array)
-
-    st.subheader("Prediction Result")
-    st.write(f"Predicted Class: **{prediction[0]}**")
-
-    if hasattr(model, "predict_proba"):
-        proba = model.predict_proba(img_array)
-        st.write("Class Probabilities:")
-        st.write(proba)
